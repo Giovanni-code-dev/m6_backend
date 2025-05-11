@@ -41,4 +41,9 @@ authorSchema.statics.checkCredentials = async function (email, plainPW) {
   return match ? user : null
 }
 
+authorSchema.statics.getIdByEmail = async function (email) {
+  const user = await this.findOne({ email }).select("_id")
+  return user ? user._id : null
+}
+
 export default model("Author", authorSchema)
