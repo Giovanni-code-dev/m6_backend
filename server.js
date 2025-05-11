@@ -6,6 +6,8 @@ import db from './db.js';
 import cors from 'cors';
 import authorsRouter from './routes/author.route.js';
 import blogPostsRouter from './routes/blogPost.route.js';
+import authRouter from './routes/auth.route.js'
+
 //import sgMail from('@sendgrid/mail') //importo sandgrid
 //sgMail.setApiKey(process.env.SENDGRID_APY_KEY)
 
@@ -18,7 +20,7 @@ db();
 
 // middleware per abilitare chiamate ajax
 app.use(cors());
-app.use(express.urlencoded({ extended: true })) // ⬅️ NECESSARIO per multipart/form-data
+app.use(express.urlencoded({ extended: true })) //  NECESSARIO per multipart/form-data
 
 app.use(express.json()); // Metodo far rispondere il server in formato JSON 
 
@@ -53,6 +55,8 @@ app.use('/authors', authorsRouter);
 
 // Route per i posts
 app.use('/blog', blogPostsRouter);
+
+app.use('/login', authRouter)
 
 
 /*
