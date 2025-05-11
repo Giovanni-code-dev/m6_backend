@@ -45,6 +45,9 @@ router.post('/', async (req, res) => {
     const foundAuthor = await Author.findById(author);
     if (!foundAuthor) return res.status(404).json({ message: 'Autore non trovato' });
 
+    console.log(req)
+
+
     const newPost = new BlogPost({ category, title, cover, readTime, author, content });
     const savedPost = await newPost.save();
 

@@ -1,8 +1,6 @@
-// const express = require('express');
 import express from 'express';
 import 'dotenv/config';
 import db from './db.js';
-//import Author from './models/Author.js';
 import cors from 'cors';
 import authorsRouter from './routes/author.route.js';
 import blogPostsRouter from './routes/blogPost.route.js';
@@ -19,7 +17,8 @@ const app = express();
 db();
 
 // middleware per abilitare chiamate ajax
-app.use(cors());
+app.use(cors({ origin: '*' }));
+
 app.use(express.urlencoded({ extended: true })) //  NECESSARIO per multipart/form-data
 
 app.use(express.json()); // Metodo far rispondere il server in formato JSON 
