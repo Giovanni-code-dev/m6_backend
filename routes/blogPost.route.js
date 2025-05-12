@@ -3,6 +3,7 @@ import express from 'express';
 import BlogPost from '../models/BlogPost.js';
 import Author from '../models/Author.js';
 import cloudinaryUploader from '../uploads/cloudinary.js';
+import { sendEmail } from '../utils/sendEmail.js'
 
 const router = express.Router();
 
@@ -45,11 +46,19 @@ router.post('/', async (req, res) => {
     const foundAuthor = await Author.findById(author);
     if (!foundAuthor) return res.status(404).json({ message: 'Autore non trovato' });
 
-    console.log(req)
-
-
     const newPost = new BlogPost({ category, title, cover, readTime, author, content });
     const savedPost = await newPost.save();
+
+    // Invia email all'autore
+    await sendEmail({
+      to: foundAuthor.email,
+      from: 'giovanni.dellelenti@gmail.com',
+      subject: 'Hai pubblicato un nuovo post!',
+      text: `Ciao ${foundAuthor.name}, hai appena pubblicato il post: "${title}".`,
+      html: `<p> Ciao <strong>${foundAuthor.name}</strong>!<br>
+      Hai appena pubblicato il tuo post: <em>${title}</em>.<br>
+      Grazie per aver contribuito al nostro blog!</p>`,
+    });
 
     res.status(201).json(savedPost);
   } catch (error) {
