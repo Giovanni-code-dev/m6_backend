@@ -66,7 +66,7 @@ router.post('/google', async (req, res) => {
   res.send({ accessToken: token, success: true, user: payload });
 });
 
-//
+// Send email per utente nuovo
 router.post("/register", async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
