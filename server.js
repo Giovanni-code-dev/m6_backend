@@ -5,12 +5,10 @@ import cors from 'cors';
 import authorsRouter from './routes/author.route.js';
 import blogPostsRouter from './routes/blogPost.route.js';
 import authRouter from './routes/auth.route.js'
-
 import emailRouter from './routes/email.route.js';
-
 import sgMail from '@sendgrid/mail';
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 // imposto app express
 const app = express();
@@ -50,17 +48,16 @@ app.post('/', (req, res) => {
 
 });
 
-
 // Route per gli autori
 app.use('/authors', authorsRouter);
 
 // Route per i posts
 app.use('/blog', blogPostsRouter);
 
+//Route login
 app.use('/login', authRouter)
 
 // Route per invio email con sendgrid
-
 app.use('/send-email', emailRouter);
 
 

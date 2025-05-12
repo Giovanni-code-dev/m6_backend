@@ -1,5 +1,22 @@
+node_modules/
+dist/
+build/
+.npm/
+.yarn/cache/
+logs/
+*.log
+coverage/
+.eslintcache
 .env
+.env.local
+.env.*.local
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+.parcel-cache/
 
-/node_modules
-
-package-lock.json
+@dniL16032021GIO

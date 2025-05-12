@@ -3,6 +3,8 @@ import Author from '../models/Author.js'
 import BlogPost from '../models/BlogPost.js'
 import cloudinaryUploader from '../uploads/cloudinary.js'
 import { JWTAuthMiddleware, adminOnly } from '../lib/middlewares.js'
+import { sendEmail } from '../utils/sendEmail.js';
+
 
 
 const router = express.Router()
@@ -10,9 +12,16 @@ const router = express.Router()
 // registrazione
 router.post('/', async (req, res) => {
   try {
-    const { nome, cognome, email, data_di_nascita, avatar, password } = req.body
+    const { nome, cognome, email, data_di_nascita, avatar, password } = req.body;
+
     if (!nome || !cognome || !email || !password) {
-      return res.status(400).json({ error: 'nome, cognome, email e password sono obbligatori' })
+      return res.status(400).json({ error: 'nome, cognome, email e password sono obbligatori' });
+    }
+
+    //Controllo duplicato
+    const existingAuthor = await Author.findOne({ email });
+    if (existingAuthor) {
+      return res.status(409).json({ error: 'Email già registrata' });
     }
 
     const newAuthor = new Author({
@@ -22,14 +31,27 @@ router.post('/', async (req, res) => {
       password,
       data_di_nascita,
       avatar,
-    })
+    });
 
-    const savedAuthor = await newAuthor.save()
-    res.status(201).json(savedAuthor)
+    const savedAuthor = await newAuthor.save();
+
+    //Invio email
+    await sendEmail({
+      to: savedAuthor.email,
+      from: 'giovanni.dellelenti@gmail.com',
+      subject: 'Benvenuto su Strive Blog!',
+      text: `Ciao ${savedAuthor.nome}, grazie per esserti registrato.`,
+      html: `<strong>Benvenuto ${savedAuthor.nome}</strong><br>La tua registrazione è andata a buon fine! 🎉`,
+    });
+
+    res.status(201).json(savedAuthor);
   } catch (error) {
-    res.status(500).json({ error: 'Errore nel salvataggio dell\'autore' })
+    console.error(error);
+    res.status(500).json({ error: 'Errore nel salvataggio dell\'autore' });
   }
-})
+});
+
+
 
 // altre routes
 
